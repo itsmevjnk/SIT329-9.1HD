@@ -71,7 +71,7 @@ static void btn_long_timer_cb(TimerHandle_t timer) {
 
 void btn_init() {
     btn_event_group = xEventGroupCreate(); // create event group
-    if (!btn_event_group) panic("cannot create button event group");
+    hard_assert(btn_event_group);
     // NOTE: ideally we want to use xEventGroupCreateStatic instead
 
     btn_long_timer = xTimerCreate(

@@ -37,8 +37,8 @@ int main()
     btn_init();
     led_init();
 
-    xTaskCreate(hello_task, "HelloWorld", 256, NULL, 1, NULL);
-    xTaskCreate(led_task, "LED", 256, NULL, 1, NULL);
+    hard_assert(xTaskCreate(hello_task, "HelloWorld", 256, NULL, 1, NULL) == pdPASS);
+    hard_assert(xTaskCreate(led_task, "LED", 256, NULL, 1, NULL) == pdPASS);
     vTaskStartScheduler();
 
     while(1){};
