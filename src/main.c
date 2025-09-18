@@ -1,10 +1,12 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "pico/stdlib.h"
 
 #include "button.h"
 #include "led.h"
+#include "ws2812.h"
 
 void hello_task(void *parameters) {
     while (true) {
@@ -25,6 +27,7 @@ void led_task(void *parameters) {
     while (true) {
         for (uint i = 0; i < 6; i++) {
             led_set((1 << i)); // turn each LED on, one at a time
+            ws2812_show(rand());
             vTaskDelay(pdMS_TO_TICKS(500));
         }
     }
@@ -36,6 +39,7 @@ int main()
 
     btn_init();
     led_init();
+    ws2812_init();
 
     hard_assert(xTaskCreate(hello_task, "HelloWorld", 256, NULL, 1, NULL) == pdPASS);
     hard_assert(xTaskCreate(led_task, "LED", 256, NULL, 1, NULL) == pdPASS);

@@ -1,16 +1,22 @@
 add_executable(${ProjectName}
-    main.c button.c led.c
+    main.c button.c led.c ws2812.c
+)
+
+pico_generate_pio_header(${ProjectName}
+    ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio
+    OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/../include/generated
 )
 
 target_include_directories(${ProjectName} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
-    ../include
+    ../include ../include/generated
 )
 
 target_link_libraries(${ProjectName} 
     pico_stdlib 
     FreeRTOS-Kernel-Heap4 
-    )
+    hardware_pio
+)
 
 pico_add_extra_outputs(${ProjectName})
 

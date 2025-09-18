@@ -9,6 +9,8 @@
 #define LED6                    8
 #define LED_BUTTON              25 // to signal long press (set to onboard LED)
 
+#define LED_WS2812              23 // WS2812 data pin
+
 /* I2C pins (for SSD1306 OLED display) */
 #define I2C_SCL                 17
 #define I2C_SDA                 16
