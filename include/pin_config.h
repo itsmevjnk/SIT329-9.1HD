@@ -5,8 +5,8 @@
 #define LED2                    3
 #define LED3                    4
 #define LED4                    6
-#define LED5                    8
-#define LED6                    11
+#define LED5                    7
+#define LED6                    8
 #define LED_BUTTON              25 // to signal long press (set to onboard LED)
 
 /* I2C pins (for SSD1306 OLED display) */
