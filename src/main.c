@@ -3,17 +3,28 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 
+#include "button.h"
 
-void hello_task() {
+void hello_task(void *parameters) {
     while (true) {
-        printf("Hello, World!\n");
-        vTaskDelay(1000);
+        EventBits_t event = xEventGroupWaitBits(
+            btn_event_group,
+            BTN_EV_SHORT_PRESS | BTN_EV_LONG_PRESS,
+            pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
+            portMAX_DELAY
+        );
+        if (event & BTN_EV_SHORT_PRESS)
+            printf("Short press detected\n");
+        if (event & BTN_EV_LONG_PRESS)
+            printf("Long press detected\n");
     }
 }
 
 int main()
 {
     stdio_init_all();
+
+    btn_init();
 
     xTaskCreate(hello_task, "HelloWorld", 256, NULL, 1, NULL);
     vTaskStartScheduler();
