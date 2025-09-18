@@ -8,28 +8,17 @@
 #include "led.h"
 #include "ws2812.h"
 
-void hello_task(void *parameters) {
-    while (true) {
-        EventBits_t event = xEventGroupWaitBits(
-            btn_event_group,
-            BTN_EV_SHORT_PRESS | BTN_EV_LONG_PRESS,
-            pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
-            portMAX_DELAY
-        );
-        if (event & BTN_EV_SHORT_PRESS)
-            printf("Short press detected\n");
-        if (event & BTN_EV_LONG_PRESS)
-            printf("Long press detected\n");
-    }
-}
+/* colours for WS2812 LED */
+#define RED                     0x7F0000
+#define GREEN                   0x007F00
 
-void led_task(void *parameters) {
+void menu_task(void *parameters) {
+    ws2812_show(RED);
     while (true) {
-        for (uint i = 0; i < 6; i++) {
-            led_set((1 << i)); // turn each LED on, one at a time
-            ws2812_show(rand());
-            vTaskDelay(pdMS_TO_TICKS(500));
-        }
+        led_blink(250);
+        vTaskDelay(pdMS_TO_TICKS(3000));
+        led_blink(500);
+        vTaskDelay(pdMS_TO_TICKS(3000));
     }
 }
 
@@ -41,8 +30,7 @@ int main()
     led_init();
     ws2812_init();
 
-    hard_assert(xTaskCreate(hello_task, "HelloWorld", 256, NULL, 1, NULL) == pdPASS);
-    hard_assert(xTaskCreate(led_task, "LED", 256, NULL, 1, NULL) == pdPASS);
+    hard_assert(xTaskCreate(menu_task, "menu", 256, NULL, 1, NULL) == pdPASS);
     vTaskStartScheduler();
 
     while(1){};

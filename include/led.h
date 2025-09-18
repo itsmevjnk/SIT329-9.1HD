@@ -23,3 +23,13 @@ void led_init();
  */
 void led_set(uint mask);
 
+/*
+ * void led_blink(uint period)
+ *  Sets the LED strip to blink with the given toggling period.
+ *  Inputs:
+ *   - period : The toggle period in milliseconds.
+ *              Setting this to 0 disables LED blinking.
+ *  Output: None.
+ */
+void led_blink(uint period);
+
