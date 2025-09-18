@@ -4,6 +4,7 @@
 #include "pico/stdlib.h"
 
 #include "button.h"
+#include "led.h"
 
 void hello_task(void *parameters) {
     while (true) {
@@ -20,13 +21,24 @@ void hello_task(void *parameters) {
     }
 }
 
+void led_task(void *parameters) {
+    while (true) {
+        for (uint i = 0; i < 6; i++) {
+            led_set((1 << i)); // turn each LED on, one at a time
+            vTaskDelay(pdMS_TO_TICKS(500));
+        }
+    }
+}
+
 int main()
 {
     stdio_init_all();
 
     btn_init();
+    led_init();
 
     xTaskCreate(hello_task, "HelloWorld", 256, NULL, 1, NULL);
+    xTaskCreate(led_task, "LED", 256, NULL, 1, NULL);
     vTaskStartScheduler();
 
     while(1){};

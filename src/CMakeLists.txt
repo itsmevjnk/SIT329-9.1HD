@@ -1,5 +1,5 @@
 add_executable(${ProjectName}
-    main.c button.c
+    main.c button.c led.c
 )
 
 target_include_directories(${ProjectName} PRIVATE
