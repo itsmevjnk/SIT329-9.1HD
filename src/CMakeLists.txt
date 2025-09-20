@@ -1,5 +1,5 @@
 add_executable(${ProjectName}
-    main.c button.c led.c ws2812.c
+    main.c button.c led.c ws2812.c game0.c games.c
 )
 
 pico_generate_pio_header(${ProjectName}
