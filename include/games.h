@@ -5,6 +5,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "button.h"
 
 /* game speeds in milliseconds */
 #define GAME_SPEED_SLOW                     1000
@@ -39,6 +40,11 @@ extern uint32_t game_speed; // delay between steps in ticks
 #define GAME_GAIN                           2
 #define GAME_LOSS                           1
 
+#define GAME_GOAL                           20 // goal score before stopping
+
+#define GAME_EV_FINISHED                    (1 << 31) // finished event bit
+// NOTE: this is also published onto the button event queue (see button.h).
+
 /*
  * void game_init()
  *  Initialise tasks for all games and keep them suspended initially.
@@ -66,3 +72,13 @@ void game_start_attract(uint index);
  *  Output: None.
  */
 void game_stop_attract(uint index);
+
+/*
+ * void game_finish()
+ *  Signals to the main task (via the button event queue) that the game has
+ *  finished. This can be used in the input task to trigger its end after a
+ *  game.
+ *  Inputs: None.
+ *  Output: None.
+ */
+void game_finish();

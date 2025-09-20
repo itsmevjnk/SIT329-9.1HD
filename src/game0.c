@@ -3,6 +3,7 @@
 #include "button.h"
 
 #include <limits.h>
+#include <stdio.h>
 
 BaseType_t game0_led_end = pdFALSE; // set when LED1 or LED6 is on
 
@@ -47,11 +48,15 @@ static void game0_input_task(void *parameter) {
             portMAX_DELAY
         );
         if (event & BTN_EV_SHORT_PRESS) { // short press received
-            if (game0_led_end) game_score += GAME_GAIN;
+            if (game0_led_end) {
+                game_score += GAME_GAIN;
+                if (game_score >= GAME_GOAL) game_finish();
+            }
             else {
                 if (game_score >= GAME_LOSS) game_score -= GAME_LOSS;
                 else game_score = 0;
             }
+            printf("Score: %d\n", game_score);
         }
         // NOTE: the menu task will handle long presses
     }

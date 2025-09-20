@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 int game_score = 0;
-uint32_t game_speed = 0; 
+uint32_t game_speed = GAME_SPEED_SLOW; 
 
 extern game_t game0_def;
 
@@ -41,4 +41,8 @@ void game_start_attract(uint index) {
 
 void game_stop_attract(uint index) {
     vTaskSuspend(game_defs[index]->attract_task);
+}
+
+void game_finish() {
+    xEventGroupSetBits(btn_event_group, GAME_EV_FINISHED);
 }
