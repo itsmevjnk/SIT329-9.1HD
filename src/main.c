@@ -58,6 +58,7 @@ void menu_task(void *parameters) {
                         game_speed = GAME_SPEED_SLOW_TICKS;
                         break;
                 }
+                led_blink(game_speed); // update blink rate
             }
             if (event & BTN_EV_LONG_PRESS) break;
         }
@@ -75,18 +76,20 @@ void menu_task(void *parameters) {
                 portMAX_DELAY
             );
             if (event & BTN_EV_LONG_PRESS) { // game reset
+                printf("Game reset\n");
                 break;
             }
             if (event & GAME_EV_FINISHED) { // game finished
                 TickType_t t_stop = xTaskGetTickCount();
                 printf(
                     "Playing time: %.3f sec\n",
-                    (float)(t_start - t_stop) / configTICK_RATE_HZ
+                    (float)(t_stop - t_start) / configTICK_RATE_HZ
                     /* tick = time (sec) * configTICK_RATE_HZ */
                 );
                 break;
             }
         }   
+        game_start_stop(game); // stop game
     }
 }
 

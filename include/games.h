@@ -49,7 +49,7 @@ extern const uint num_games; // number of games
 
 #define GAME_GOAL                           20 // goal score before stopping
 
-#define GAME_EV_FINISHED                    (1 << 31) // finished event bit
+#define GAME_EV_FINISHED                    (1 << 2) // finished event bit
 // NOTE: this is also published onto the button event queue (see button.h).
 
 /*
