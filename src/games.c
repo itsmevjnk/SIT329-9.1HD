@@ -6,10 +6,11 @@ int game_score = 0;
 uint32_t game_speed = GAME_SPEED_SLOW; 
 
 extern game_t game0_def;
+extern game_t game1_def;
 
 /* game definitions list */
 game_t *game_defs[] = {
-    &game0_def
+    &game0_def, &game1_def
 };
 
 void game_init() {
