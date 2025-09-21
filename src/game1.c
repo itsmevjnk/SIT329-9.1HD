@@ -20,14 +20,9 @@ int game1_num_presses = 0; // number of presses needed
 static void game1_attract_task(void *parameter) {
     (void) parameter;
     while (true) {
-        for (uint i = 0; i < 6; i++) { // normal direction (0 -> 5)
-            led_set(1 << i);
-            vTaskDelay(pdMS_TO_TICKS(GAME_SPEED_MED));
-        }
-        for (uint i = 4; i > 0; i--) { // reverse direction (4 -> 1)
-            led_set(1 << i);
-            vTaskDelay(pdMS_TO_TICKS(GAME_SPEED_MED));
-        }
+        uint idx = rand() % 6; // LED index to turn on
+        led_set((1 << idx));
+        vTaskDelay(pdMS_TO_TICKS(GAME_SPEED_MED));
     }
 }
 
