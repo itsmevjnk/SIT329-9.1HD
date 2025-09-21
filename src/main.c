@@ -94,8 +94,6 @@ int main()
 {
     stdio_init_all();
 
-    sleep_ms(10000);
-
     btn_init();
     led_init();
     ws2812_init();
