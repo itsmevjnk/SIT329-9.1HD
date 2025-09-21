@@ -12,6 +12,11 @@
 #define GAME_SPEED_MED                      500
 #define GAME_SPEED_FAST                     250
 
+/* game speeds in ticks */
+#define GAME_SPEED_SLOW_TICKS               pdMS_TO_TICKS(GAME_SPEED_SLOW)
+#define GAME_SPEED_MED_TICKS                pdMS_TO_TICKS(GAME_SPEED_MED)
+#define GAME_SPEED_FAST_TICKS               pdMS_TO_TICKS(GAME_SPEED_FAST)
+
 /* game definition structure */
 typedef struct {
     const char *name;
@@ -35,6 +40,8 @@ extern game_t *games; // available games
 
 extern int game_score; // game score 
 extern uint32_t game_speed; // delay between steps in ticks
+
+extern const uint num_games; // number of games
 
 /* score gain and loss from button presses */
 #define GAME_GAIN                           2
@@ -82,3 +89,12 @@ void game_stop_attract(uint index);
  *  Output: None.
  */
 void game_finish();
+
+/*
+ * void game_start_stop(uint index)
+ *  Starts/stops the specified game's main task.
+ *  Inputs:
+ *   - index : The index of the game to start or stop.
+ *  Output: None.
+ */
+void game_start_stop(uint index);

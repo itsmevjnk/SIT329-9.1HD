@@ -15,23 +15,78 @@
 #define GREEN                   0x007F00
 
 void menu_task(void *parameters) {
-    ws2812_show(OFF);
+    uint game = 0;
     while (true) {
-        EventBits_t event = xEventGroupWaitBits(
-            btn_event_group,
-            BTN_EV_SHORT_PRESS | BTN_EV_LONG_PRESS,
-            pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
-            portMAX_DELAY
-        );
-        if (event & BTN_EV_SHORT_PRESS) {
-            ws2812_show(GREEN);
-            game_start_attract(0);
+        /* attract mode - select game */
+        ws2812_show(GREEN);
+        game_start_attract(game);
+        while (true) {
+            EventBits_t event = xEventGroupWaitBits(
+                btn_event_group,
+                BTN_EV_SHORT_PRESS | BTN_EV_LONG_PRESS,
+                pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
+                portMAX_DELAY
+            );
+            if (event & BTN_EV_SHORT_PRESS) {
+                game++;
+                if (game >= num_games) game = 0;
+                game_start_attract(game);
+            }
+            if (event & BTN_EV_LONG_PRESS) break;
         }
-        if (event & BTN_EV_LONG_PRESS) {
-            ws2812_show(RED);
-            game_stop_attract(0);
-            led_set(0);
+        game_stop_attract(game);
+
+        /* select game speed */
+        ws2812_show(RED);
+        led_blink(game_speed);
+        while (true) {
+            EventBits_t event = xEventGroupWaitBits(
+                btn_event_group,
+                BTN_EV_SHORT_PRESS | BTN_EV_LONG_PRESS,
+                pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
+                portMAX_DELAY
+            );
+            if (event & BTN_EV_SHORT_PRESS) {
+                switch (game_speed) { // cycle through game speeds
+                    case GAME_SPEED_SLOW_TICKS:
+                        game_speed = GAME_SPEED_MED_TICKS;
+                        break;
+                    case GAME_SPEED_MED_TICKS:
+                        game_speed = GAME_SPEED_FAST_TICKS;
+                        break;
+                    case GAME_SPEED_FAST_TICKS:
+                        game_speed = GAME_SPEED_SLOW_TICKS;
+                        break;
+                }
+            }
+            if (event & BTN_EV_LONG_PRESS) break;
         }
+        led_set(0); // turn off all LEDs and stop blinking
+
+        /* run the game */
+        ws2812_show(OFF);
+        TickType_t t_start = xTaskGetTickCount();
+        game_start_stop(game);
+        while (true) {
+            EventBits_t event = xEventGroupWaitBits(
+                btn_event_group,
+                BTN_EV_LONG_PRESS | GAME_EV_FINISHED,
+                pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
+                portMAX_DELAY
+            );
+            if (event & BTN_EV_LONG_PRESS) { // game reset
+                break;
+            }
+            if (event & GAME_EV_FINISHED) { // game finished
+                TickType_t t_stop = xTaskGetTickCount();
+                printf(
+                    "Playing time: %.3f sec\n",
+                    (float)(t_start - t_stop) / configTICK_RATE_HZ
+                    /* tick = time (sec) * configTICK_RATE_HZ */
+                );
+                break;
+            }
+        }   
     }
 }
 
