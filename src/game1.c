@@ -43,13 +43,15 @@ static void game1_input_task(void *parameter) {
             pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
             portMAX_DELAY
         );
-        game1_num_presses--;
+        if (event & BTN_EV_SHORT_PRESS) game1_num_presses--;
         // NOTE: the menu task will handle long presses
     }
 }
 
 TaskHandle_t game1_input_task_handle = NULL;
     // task handle for game1_input_task
+
+#define GAME1_WAIT                          1000 // button press record period
 
 /*
  * static void game1_main_task(void *parameter)
@@ -68,8 +70,14 @@ static void game1_main_task(void *parameter) {
             ulTaskNotifyTake(pdTRUE, portMAX_DELAY) != pdTRUE
         ); // wait until we receive a notification - then we can start the game
 
+        int total_num_presses = 0;
         while (game_score < GAME_GOAL) {
-            game1_num_presses = rand() % 6 + 1; // number of button presses
+            int new_num_presses;
+            do { // keep on randomising until we have a different count
+                new_num_presses = rand() % 6 + 1;
+            } while (new_num_presses == total_num_presses);
+            int total_num_presses = new_num_presses; // number of button presses
+            game1_num_presses = total_num_presses;
             led_set((1 << (game1_num_presses - 1))); // light up the corresponding LED
 
             if (!game1_input_task_handle) { // launch input task
@@ -87,12 +95,21 @@ static void game1_main_task(void *parameter) {
             if (ulTaskNotifyTake(pdTRUE, game_speed) == pdTRUE) break;
                 // game ended prematurely
 
+            led_set(0); // turn LEDs off
+
+            if (ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(GAME1_WAIT)) == pdTRUE)
+                break;
+            
             if (game1_num_presses == 0) game_score += GAME_GAIN;
             else {
                 if (game_score > GAME_LOSS) game_score -= GAME_LOSS;
                 else game_score = 0;
             }
-            printf("Score: %d\n", game_score);
+            printf(
+                "Score: %d [button pressed %d/%d times]\n",
+                game_score,
+                total_num_presses - game1_num_presses, total_num_presses
+            );
 
             if (game_score >= GAME_GOAL)
                 game_finish(); // game finished - signal upstream
