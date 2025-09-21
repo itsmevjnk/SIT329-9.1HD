@@ -66,6 +66,7 @@ void menu_task(void *parameters) {
 
         /* run the game */
         ws2812_show(OFF);
+        game_score = 0; // remember to reset the game score!
         TickType_t t_start = xTaskGetTickCount();
         game_start_stop(game);
         while (true) {
