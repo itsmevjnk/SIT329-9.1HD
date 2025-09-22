@@ -14,23 +14,31 @@
 #define RED                     0x7F0000
 #define GREEN                   0x007F00
 
+#define CLEAR_LINE              "\x1B[2K" // VT100 line clear sequence
+
 void menu_task(void *parameters) {
     uint game = 0;
     while (true) {
         /* attract mode - select game */
         ws2812_show(GREEN);
         game_start_attract(game);
+        printf(
+            "[RETURN/LONG PRESS] Select this game [SPACE/PRESS] Next game\n"
+            "Select a game: %s", game_get_name(game)
+        );
         while (true) {
             EventBits_t event = xEventGroupWaitBits(
                 btn_event_group,
                 BTN_EV_SHORT_PRESS | BTN_EV_LONG_PRESS,
-                pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
+                pdTRUE, pdFALSE, // wait for any event, and clear when received
                 portMAX_DELAY
             );
             if (event & BTN_EV_SHORT_PRESS) {
                 game++;
                 if (game >= num_games) game = 0;
                 game_start_attract(game);
+                printf(CLEAR_LINE "\rSelect a game: %s", game_get_name(game));
+                // NOTE: go back to line start and clear it for new game name
             }
             if (event & BTN_EV_LONG_PRESS) break;
         }
@@ -39,11 +47,17 @@ void menu_task(void *parameters) {
         /* select game speed */
         ws2812_show(RED);
         led_blink(game_speed);
+        printf(
+            "\n[RETURN/LONG PRESS] Select this speed "
+            "[SPACE/PRESS] Next speed\n"
+            // NOTE: we need to send a newline for the previous section
+            "Select a speed: %s", game_get_speed_str()
+        );
         while (true) {
             EventBits_t event = xEventGroupWaitBits(
                 btn_event_group,
                 BTN_EV_SHORT_PRESS | BTN_EV_LONG_PRESS,
-                pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
+                pdTRUE, pdFALSE, // wait for any event, and clear when received
                 portMAX_DELAY
             );
             if (event & BTN_EV_SHORT_PRESS) {
@@ -59,12 +73,16 @@ void menu_task(void *parameters) {
                         break;
                 }
                 led_blink(game_speed); // update blink rate
+                printf(
+                    CLEAR_LINE "\rSelect a speed: %s", game_get_speed_str()
+                );
             }
             if (event & BTN_EV_LONG_PRESS) break;
         }
         led_set(0); // turn off all LEDs and stop blinking
 
         /* run the game */
+        printf("\nPress RETURN or LONG PRESS at any time to restart.\n");
         ws2812_show(OFF);
         game_score = 0; // remember to reset the game score!
         TickType_t t_start = xTaskGetTickCount();
@@ -73,7 +91,7 @@ void menu_task(void *parameters) {
             EventBits_t event = xEventGroupWaitBits(
                 btn_event_group,
                 BTN_EV_LONG_PRESS | GAME_EV_FINISHED,
-                pdTRUE, pdFALSE, // wait for any event, and clear bits when recv'd
+                pdTRUE, pdFALSE, // wait for any event, and clear when received
                 portMAX_DELAY
             );
             if (event & BTN_EV_LONG_PRESS) { // game reset

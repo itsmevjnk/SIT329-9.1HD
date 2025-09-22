@@ -53,3 +53,17 @@ void game_finish() {
 void game_start_stop(uint index) {
     xTaskNotifyGive(game_defs[index]->main_task);
 }
+
+const char *game_get_name(uint index) {
+    return game_defs[index]->name;
+}
+
+
+const char *game_get_speed_str() {
+    switch (game_speed) {
+        case GAME_SPEED_FAST_TICKS: return "Fast";
+        case GAME_SPEED_MED_TICKS: return "Medium";
+        case GAME_SPEED_SLOW_TICKS: return "Slow";
+        default: return "(unknown)";
+    }
+}

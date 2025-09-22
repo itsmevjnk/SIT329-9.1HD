@@ -98,3 +98,21 @@ void game_finish();
  *  Output: None.
  */
 void game_start_stop(uint index);
+
+/*
+ * const char *game_get_name(uint index)
+ *  Gets the declared name of the specified game.
+ *  Inputs:
+ *   - index : The index of the game to retrieve its name.
+ *  Output: The name of the specified game as declared in its game_t structure.
+ */
+const char *game_get_name(uint index);
+
+/*
+ * const char *game_get_speed_str()
+ *  Gets the representative string (Fast/Medium/Slow) of the currently set
+ *  game speed.
+ *  Inputs: None.
+ *  Output: A string (Fast/Medium/Slow) representing the current speed.
+ */
+const char *game_get_speed_str();
