@@ -93,8 +93,6 @@ static void game1_main_task(void *parameter) {
                     ) == pdPASS
                 );
             } else vTaskResume(game1_input_task_handle); // resume suspended task
-            
-            vTaskSuspend(game1_input_task_handle); // suspend input task
 
             if (ulTaskNotifyTake(pdTRUE, game_speed) == pdTRUE) break;
                 // game ended prematurely
@@ -103,6 +101,8 @@ static void game1_main_task(void *parameter) {
 
             if (ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(GAME1_WAIT)) == pdTRUE)
                 break;
+                
+            vTaskSuspend(game1_input_task_handle); // suspend input task
             
             if (game1_num_presses == 0) game_score += GAME_GAIN;
             else {
