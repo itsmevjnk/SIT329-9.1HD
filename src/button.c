@@ -30,7 +30,7 @@ static void btn_handler(uint gpio, uint32_t events) {
         return; // invalid event (TODO: will this occur at all?)
         
     BaseType_t xHigherPriorityTaskWoken = pdFALSE; // needed for timer ops
-    if (events & GPIO_IRQ_EDGE_FALL) { // rising edge (button press)
+    if (events & GPIO_IRQ_EDGE_FALL) { // falling edge (button press)
         btn_press_time = xTaskGetTickCountFromISR();
 
         /* start long press timer (which also turns on indicator on expire) */
