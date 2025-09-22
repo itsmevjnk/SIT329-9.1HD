@@ -16,3 +16,12 @@ extern EventGroupHandle_t btn_event_group;
  *  Output: None.
  */
 void btn_init();
+
+/*
+ * void btn_uart_init()
+ *  Initialises UART-based button handling. The SPACE and RETURN keys will act
+ *  as short and long presses respectively.
+ *  Inputs: None.
+ *  Output: None.
+ */
+void btn_uart_init();

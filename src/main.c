@@ -117,6 +117,7 @@ int main()
     stdio_init_all();
 
     btn_init();
+    btn_uart_init();
     led_init();
     ws2812_init();
     game_init();
