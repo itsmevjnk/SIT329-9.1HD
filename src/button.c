@@ -86,7 +86,7 @@ void btn_init() {
     gpio_put(LED_BUTTON, false); // initially off
 
     /* initialise button pin */
-    // gpio_init(BUTTON);
+    gpio_init(BUTTON);
     gpio_set_dir(BUTTON, GPIO_IN);
     gpio_pull_up(BUTTON); // internal pull-up
     gpio_set_irq_enabled_with_callback(
