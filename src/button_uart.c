@@ -1,4 +1,5 @@
 #include "button.h"
+#include "priorities.h"
 
 #include <stdio.h>
 
@@ -33,8 +34,7 @@ void btn_uart_init() {
     hard_assert(
         xTaskCreate(
             btn_uart_task, "btn_uart", 200, NULL,
-            tskIDLE_PRIORITY + 1,
-            // NOTE: we don't want high priorities as it can starve other tasks
+            BTN_UART_PRIORITY,
             NULL
         ) == pdPASS
     );

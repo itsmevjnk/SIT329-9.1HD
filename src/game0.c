@@ -1,6 +1,7 @@
 #include "games.h"
 #include "led.h"
 #include "button.h"
+#include "priorities.h"
 
 #include <limits.h>
 #include <stdio.h>
@@ -87,7 +88,7 @@ static void game0_main_task(void *parameter) {
             hard_assert(
                 xTaskCreate(
                     game0_input_task, "game0_input", 200, NULL,
-                    configMAX_PRIORITIES - 1, // max priority for input task
+                    GAME_INPUT_PRIORITY,
                     &game0_input_task_handle
                 ) == pdPASS
             );

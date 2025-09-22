@@ -9,12 +9,23 @@
 #include "ws2812.h"
 #include "games.h"
 
+#include "priorities.h"
+
 /* colours for WS2812 LED */
 #define OFF                     0x000000
 #define RED                     0x7F0000
 #define GREEN                   0x007F00
 
-void menu_task(void *parameters) {
+/*
+ * void main_task(void *parameters)
+ *  Task function for the main task, which handles game configuration,
+ *  launching, reset, and result display (except for score display, which is 
+ *  the responsibility of the games' main tasks).
+ *  Inputs:
+ *   - parameters : Parameters passed from xTaskCreate - ignored.
+ *  Output: None.
+ */
+void main_task(void *parameters) {
     uint game = 0;
     while (true) {
         /* attract mode - select game */
@@ -110,18 +121,32 @@ void menu_task(void *parameters) {
     }
 }
 
+/*
+ * int main()
+ *  The application's entry point, which initialises hardware drivers and the
+ *  main FreeRTOS task. This function will run indefinitely.
+ *  Inputs: None.
+ *  Output: Never.
+ */
 int main()
 {
     stdio_init_all();
 
+    /* initialise hardware interfaces */
     btn_init();
     btn_uart_init();
     led_init();
     ws2812_init();
-    game_init();
 
-    hard_assert(xTaskCreate(menu_task, "menu", 256, NULL, 1, NULL) == pdPASS);
+    game_init(); // set up games
+
+    /* set up main task and start scheduler */
+    hard_assert(
+        xTaskCreate(
+            main_task, "main", 256, NULL, MAIN_PRIORITY, NULL
+        ) == pdPASS
+    );
     vTaskStartScheduler();
 
-    while(1){};
+    while (true); // idle while scheduler runs
 }

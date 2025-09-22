@@ -1,4 +1,5 @@
 #include "games.h"
+#include "priorities.h"
 
 #include <stdio.h>
 
@@ -21,14 +22,16 @@ void game_init() {
         game_t *game = game_defs[i];
         hard_assert(
             xTaskCreate(
-                game->attract_task_fn, game->attract_task_name, 200, NULL, 1,
+                game->attract_task_fn, game->attract_task_name, 200, NULL,
+                GAME_ATTRACT_PRIORITY,
                 &game->attract_task
             ) == pdPASS
         );
         vTaskSuspend(game->attract_task); // put attract task into suspend ASAP
         hard_assert(
             xTaskCreate(
-                game->main_task_fn, game->main_task_name, 200, NULL, 1,
+                game->main_task_fn, game->main_task_name, 200, NULL,
+                GAME_MAIN_PRIORITY,
                 &game->main_task
             ) == pdPASS
         );
