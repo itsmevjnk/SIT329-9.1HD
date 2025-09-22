@@ -93,13 +93,13 @@ void menu_task(void *parameters) {
                 portMAX_DELAY
             );
             if (event & BTN_EV_LONG_PRESS) { // game reset
-                printf("Game reset\n");
+                printf("\nGame reset\n"); // NOTE: newline for score line
                 break;
             }
             if (event & GAME_EV_FINISHED) { // game finished
                 TickType_t t_stop = xTaskGetTickCount();
                 printf(
-                    "Playing time: %.3f sec\n",
+                    "\nPlaying time: %.3f sec\n",
                     (float)(t_stop - t_start) / configTICK_RATE_HZ
                     /* tick = time (sec) * configTICK_RATE_HZ */
                 );

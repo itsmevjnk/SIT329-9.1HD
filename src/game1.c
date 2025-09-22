@@ -73,6 +73,7 @@ static void game1_main_task(void *parameter) {
         ); // wait until we receive a notification - then we can start the game
 
         int total_num_presses = 0;
+        printf("Score: %d", game_score); // should be 0
         while (game_score < GAME_GOAL) {
             int new_num_presses;
             do { // keep on randomising until we have a different count
@@ -108,15 +109,14 @@ static void game1_main_task(void *parameter) {
                 else game_score = 0;
             }
             printf(
-                CLEAR_LINE "\rScore: %d [button pressed %d/%d times]\n",
+                CLEAR_LINE "\rScore: %d [button pressed %d/%d times]",
                 game_score,
                 total_num_presses - game1_num_presses, total_num_presses
             );
-
-            if (game_score >= GAME_GOAL)
-                game_finish(); // game finished - signal upstream
         }
-        
+        putchar('\n'); // end score line
+        if (game_score >= GAME_GOAL)
+            game_finish(); // game finished - signal upstream
     }
 }
 

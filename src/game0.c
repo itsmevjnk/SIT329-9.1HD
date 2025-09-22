@@ -56,7 +56,7 @@ static void game0_input_task(void *parameter) {
                 if (game_score >= GAME_LOSS) game_score -= GAME_LOSS;
                 else game_score = 0;
             }
-            printf(CLEAR_LINE "\rScore: %d\n", game_score);
+            printf(CLEAR_LINE "\rScore: %d", game_score);
         }
         // NOTE: the menu task will handle long presses
     }
@@ -82,6 +82,7 @@ static void game0_main_task(void *parameter) {
             ulTaskNotifyTake(pdTRUE, portMAX_DELAY) != pdTRUE
         ); // wait until we receive a notification - then we can start the game
 
+        printf("Score: %d", game_score);
         if (!game0_input_task_handle) { // launch input task
             hard_assert(
                 xTaskCreate(
