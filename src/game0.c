@@ -21,11 +21,11 @@ static void game0_attract_task(void *parameter) {
     while (true) {
         for (uint i = 0; i < 6; i++) { // normal direction (0 -> 5)
             led_set(1 << i);
-            vTaskDelay(pdMS_TO_TICKS(GAME_SPEED_MED));
+            vTaskDelay(GAME_SPEED_MED_TICKS);
         }
         for (uint i = 4; i > 0; i--) { // reverse direction (4 -> 1)
             led_set(1 << i);
-            vTaskDelay(pdMS_TO_TICKS(GAME_SPEED_MED));
+            vTaskDelay(GAME_SPEED_MED_TICKS);
         }
     }
 }

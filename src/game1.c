@@ -22,7 +22,9 @@ static void game1_attract_task(void *parameter) {
     while (true) {
         uint idx = rand() % 6; // LED index to turn on
         led_set((1 << idx));
-        vTaskDelay(pdMS_TO_TICKS(GAME_SPEED_MED));
+        vTaskDelay(GAME_SPEED_MED_TICKS);
+        led_set(0);
+        vTaskDelay(GAME_SPEED_MED_TICKS);
     }
 }
 
