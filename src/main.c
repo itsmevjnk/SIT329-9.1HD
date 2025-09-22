@@ -14,8 +14,6 @@
 #define RED                     0x7F0000
 #define GREEN                   0x007F00
 
-#define CLEAR_LINE              "\x1B[2K" // VT100 line clear sequence
-
 void menu_task(void *parameters) {
     uint game = 0;
     while (true) {

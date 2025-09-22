@@ -52,6 +52,8 @@ extern const uint num_games; // number of games
 #define GAME_EV_FINISHED                    (1 << 2) // finished event bit
 // NOTE: this is also published onto the button event queue (see button.h).
 
+#define CLEAR_LINE                          "\x1B[2K" // VT100 line clear seq
+
 /*
  * void game_init()
  *  Initialise tasks for all games and keep them suspended initially.

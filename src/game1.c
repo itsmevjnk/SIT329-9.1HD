@@ -106,7 +106,7 @@ static void game1_main_task(void *parameter) {
                 else game_score = 0;
             }
             printf(
-                "Score: %d [button pressed %d/%d times]\n",
+                CLEAR_LINE "\rScore: %d [button pressed %d/%d times]\n",
                 game_score,
                 total_num_presses - game1_num_presses, total_num_presses
             );

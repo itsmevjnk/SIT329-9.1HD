@@ -56,7 +56,7 @@ static void game0_input_task(void *parameter) {
                 if (game_score >= GAME_LOSS) game_score -= GAME_LOSS;
                 else game_score = 0;
             }
-            printf("Score: %d\n", game_score);
+            printf(CLEAR_LINE "\rScore: %d\n", game_score);
         }
         // NOTE: the menu task will handle long presses
     }
